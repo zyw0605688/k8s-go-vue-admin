@@ -23,6 +23,7 @@ const defaultConfig: AxiosRequestConfig = {
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest"
   },
+  baseURL: "/api",
   // 数组格式参数序列化（https://github.com/axios/axios/issues/5142）
   paramsSerializer: {
     serialize: stringify as unknown as CustomParamsSerializer
@@ -187,7 +188,8 @@ class PureHttp {
     params?: AxiosRequestConfig<T>,
     config?: PureHttpRequestConfig
   ): Promise<P> {
-    return this.request<P>("get", url, params, config);
+    const urlWithParams = `${url}?${stringify(params)}`
+    return this.request<P>("get", urlWithParams, config);
   }
 }
 

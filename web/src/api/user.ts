@@ -30,10 +30,31 @@ export type RefreshTokenResult = {
 
 /** 登录 */
 export const getLogin = (data?: object) => {
-  return http.request<UserResult>("post", "/login", { data });
+  return new Promise((resolve, reject)=>{
+    resolve({
+      success: true,
+      data: {
+        username: "admin",
+        // 一个用户可能有多个角色
+        roles: ["admin"],
+        accessToken: "eyJhbGciOiJIUzUxMiJ9.admin",
+        refreshToken: "eyJhbGciOiJIUzUxMiJ9.adminRefresh",
+        expires: "2023/10/30 00:00:00"
+      }
+    })
+  })
 };
 
 /** 刷新token */
 export const refreshTokenApi = (data?: object) => {
-  return http.request<RefreshTokenResult>("post", "/refreshToken", { data });
+  return new Promise((resolve)=>{
+    resolve({
+      success: true,
+      data: {
+        accessToken: "eyJhbGciOiJIUzUxMiJ9.newAdmin",
+        refreshToken: "eyJhbGciOiJIUzUxMiJ9.newAdminRefresh",
+        expires: "2023/10/30 23:59:59"
+      }
+    })
+  })
 };

@@ -35,15 +35,19 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
     resolve: {
       alias
     },
-    // 服务端渲染
     server: {
-      // 是否开启 https
       https: false,
-      // 端口号
       port: VITE_PORT,
       host: "0.0.0.0",
-      // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
-      proxy: {}
+      proxy: {
+        '/api': {
+          target: "http://127.0.0.1:7000",
+          secure: false,
+          ws: true,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      }
     },
     plugins: getPluginsList(command, VITE_CDN, VITE_COMPRESSION),
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options

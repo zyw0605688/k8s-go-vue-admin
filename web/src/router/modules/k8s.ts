@@ -25,6 +25,31 @@ export default {
       meta: {
         title: "应用部署"
       }
-    }
+    },
+    {
+      path: "/pod",
+      name: "pod",
+      component: () => import("@/views/k8s/pod/index.vue"),
+      meta: {
+        title: "容器组"
+      }
+    },
+    {
+      path: "/service",
+      name: "service",
+      component: () => import("@/views/k8s/service/index.vue"),
+      meta: {
+        title: "服务"
+      }
+    },
+    {
+      path: "/ingress",
+      name: "ingress",
+      component: () => import("@/views/k8s/ingress/index.vue"),
+      meta: {
+        title: "应用路由"
+      }
+    },
+
   ]
 };
