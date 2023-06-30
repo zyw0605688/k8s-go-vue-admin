@@ -15,9 +15,8 @@ func Setup(r *gin.Engine) {
 		r.GET("/node", api.GetNodeList)
 	}
 	{
-		r.POST("/namespace", api.GetNameSpaceList)
-		r.DELETE("/namespace", api.GetNameSpaceList)
-		r.PUT("/namespace", api.GetNameSpaceList)
+		r.POST("/namespace", api.AddNameSpace)
+		r.DELETE("/namespace", api.DeleteNameSpace)
 		r.GET("/namespace", api.GetNameSpaceList)
 	}
 
