@@ -39,7 +39,8 @@
 <script setup>
 import {getRelativeTime}             from "@/utils/time"
 import {onMounted, reactive, toRefs} from "vue";
-import {IngressList, NamespaceList}  from "@/api/k8s_base";
+import {IngressList}  from "@/api/k8s_base";
+import {NamespaceList}               from "@/api/namespace";
 
 const data = reactive({
     tableData: [],

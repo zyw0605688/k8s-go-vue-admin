@@ -19,6 +19,14 @@ export default {
       }
     },
     {
+      path: "/namespace",
+      name: "namespace",
+      component: () => import("@/views/k8s/namespace/index.vue"),
+      meta: {
+        title: "命名空间"
+      }
+    },
+    {
       path: "/deployment",
       name: "deployment",
       component: () => import("@/views/k8s/deployment/index.vue"),

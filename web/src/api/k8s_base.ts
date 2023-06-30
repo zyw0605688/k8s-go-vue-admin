@@ -4,10 +4,6 @@ export const NodeList = () => {
   return http.get("/node")
 }
 
-export const NamespaceList = () => {
-  return http.get("/namespace")
-}
-
 export const PodList = (params) => {
   return http.get("/pod", params)
 }
