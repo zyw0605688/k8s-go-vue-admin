@@ -32,9 +32,10 @@ func AddNameSpace(c *gin.Context) {
 }
 
 func DeleteNameSpace(c *gin.Context) {
-	result, _ := config.ClientSet.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
+	namespace := c.Query("namespace")
+	_ = config.ClientSet.CoreV1().Namespaces().Delete(context.TODO(), namespace, metav1.DeleteOptions{})
 	c.JSON(200, gin.H{
-		"message": result,
+		"message": namespace,
 	})
 }
 

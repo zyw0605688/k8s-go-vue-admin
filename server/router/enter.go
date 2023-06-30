@@ -21,9 +21,9 @@ func Setup(r *gin.Engine) {
 	}
 
 	{
-		r.POST("/deployment", api.GetDeploymentList)
-		r.DELETE("/deployment", api.GetDeploymentList)
-		r.PUT("/deployment", api.GetDeploymentList)
+		r.POST("/deployment", api.CreateDeployment)
+		r.DELETE("/deployment", api.DeleteDeployment)
+		r.PUT("/deployment", api.UpdateDeployment)
 		r.GET("/deployment", api.GetDeploymentList)
 	}
 
