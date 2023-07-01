@@ -1,8 +1,7 @@
 <template>
     <div>
-        <h2>命名空间</h2>
-        <el-input v-model="namespace" style="width: 200px" clearable></el-input>
-        <el-button style="margin-left: 12px" @click="add">新增</el-button>
+        <el-input v-model="namespace" style="width: 200px" clearable placeholder="请输入命名空间"></el-input>
+        <el-button style="margin-left: 6px" @click="add">新增</el-button>
         <el-table :data="tableData" width="100%" style="margin-top: 12px">
             <el-table-column prop="metadata.name" label="名称"/>
             <el-table-column prop="status.phase" label="状态"/>

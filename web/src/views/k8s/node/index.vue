@@ -1,7 +1,6 @@
 <template>
     <div>
-        <h3>node</h3>
-        <el-table :data="tableData" style="width: 100%">
+        <el-table :data="tableData" style="width: 100%;margin-top: 12px">
             <el-table-column prop="metadata.name" label="名称"/>
             <el-table-column prop="status.conditions[3].type" label="状态"/>
             <el-table-column prop="status.addresses[0].address" label="IP地址"/>

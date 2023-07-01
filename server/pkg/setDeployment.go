@@ -18,7 +18,7 @@ type DeploymentInfo struct {
 func SetDeployment(info *DeploymentInfo) *appsv1.Deployment {
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "nginx",
+			Name: info.PodName,
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: pointer.Int32Ptr(info.PodReplicas),

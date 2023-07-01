@@ -1,12 +1,8 @@
 <template>
     <div>
-        <h3>deployment</h3>
-        请选择命名空间：
-        <el-select v-model="namespace" @change="getList">
-            <el-option v-for="(item,index) in namespaceList" :index="index" :key="item.metadata.name" :value="item.metadata.name"></el-option>
-        </el-select>
-        <el-button @click="showDialog">新增</el-button>
-        <el-table :data="tableData" style="width: 100%">
+        <Namespace @namespaceChanged="namespaceChanged"></Namespace>
+        <el-button @click="showDialog" style="float: right">新增</el-button>
+        <el-table :data="tableData" style="width: 100%;margin-top: 12px">
             <el-table-column prop="metadata.name" label="名称" width="220"/>
             <el-table-column label="所在节点" prop="spec.template.spec.nodeName"></el-table-column>
             <el-table-column label="">
@@ -34,7 +30,9 @@
                     <el-input v-model="form.pod_name" />
                 </el-form-item>
                 <el-form-item label="命名空间">
-                    <el-input v-model="form.pod_namespace" />
+                    <el-select v-model="form.pod_namespace" @change="getList">
+                        <el-option v-for="(item,index) in namespaceList" :index="index" :label="item.metadata.name" :value="item.metadata.name"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="镜像">
                     <el-input v-model="form.pod_image" />
@@ -43,7 +41,7 @@
                     <el-input v-model.number="form.pod_port" />
                 </el-form-item>
                 <el-form-item label="副本数">
-                    <el-input v-model.number="form.pod_replicas" />
+                    <el-input-number v-model.number="form.pod_replicas" />
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="submit">提交</el-button>
@@ -56,30 +54,30 @@
 import {getRelativeTime}             from "@/utils/time"
 import {onMounted, reactive, toRefs}                     from "vue";
 import {AddDeployment, DeleteDeployment, DeploymentList} from "@/api/deployment";
-import {NamespaceList}                                   from "@/api/namespace";
+import Namespace from "@/components/namespace/index.vue"
 
 const data = reactive({
     tableData: [],
     namespace: "",
     namespaceList: [],
     visible:false,
-    form:{}
+    form:{
+        pod_replicas:1,
+    }
 })
 const {tableData, namespace, namespaceList,visible,form} = toRefs(data)
+
+const namespaceChanged = (val) => {
+    data.namespace = val;
+    getList()
+}
 const getList = async () => {
     data.tableData = []
     const res = await DeploymentList({namespace:data.namespace})
     data.tableData = res.message.items
 }
 
-const getNamespaceList = async () => {
-    const res = await NamespaceList()
-    data.namespaceList = res.message.items
-    data.namespace = data.namespaceList[0].metadata.name
-}
-
 onMounted(async () => {
-    await getNamespaceList()
     await getList()
 })
 

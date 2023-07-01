@@ -1,11 +1,7 @@
 <template>
     <div>
-        <h3>pod</h3>
-        请选择命名空间：
-        <el-select v-model="namespace" @change="getList">
-            <el-option v-for="(item,index) in namespaceList" :index="index" :key="item.metadata.name" :value="item.metadata.name"></el-option>
-        </el-select>
-        <el-table :data="tableData" style="width: 100%">
+        <Namespace @namespaceChanged="namespaceChanged"></Namespace>
+        <el-table :data="tableData" style="width: 100%;margin-top: 12px">
             <el-table-column prop="metadata.name" label="名称" width="220"/>
             <el-table-column prop="status.podIP" label="IP地址" width="120"/>
             <el-table-column prop="status.phase" label="phase" width="120"/>
@@ -35,26 +31,24 @@ import {getRelativeTime} from "@/utils/time"
 import {onMounted, reactive, toRefs} from "vue";
 import {PodList}      from "@/api/k8s_base";
 import {NamespaceList} from "@/api/namespace";
+import Namespace from "@/components/namespace/index.vue";
 
 const data = reactive({
     tableData: [],
     namespace: "",
-    namespaceList: []
 })
-const {tableData, namespace, namespaceList} = toRefs(data)
+const {tableData, namespace} = toRefs(data)
+
+const namespaceChanged = (val) => {
+    data.namespace = val;
+    getList()
+}
 const getList = async () => {
     const res = await PodList({namespace:data.namespace})
     data.tableData = res.message.items
 }
 
-const getNamespaceList = async () => {
-    const res = await NamespaceList()
-    data.namespaceList = res.message.items
-    data.namespace = data.namespaceList[0].metadata.name
-}
-
 onMounted(async () => {
-    await getNamespaceList()
     await getList()
 })
 </script>
