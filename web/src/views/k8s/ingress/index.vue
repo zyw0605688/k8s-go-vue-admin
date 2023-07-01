@@ -1,6 +1,7 @@
 <template>
     <div>
-        <Namespace @namespaceChanged="namespaceChanged"></Namespace>
+        <Namespace @namespaceChanged="namespaceChanged" ref="namespaceRef"></Namespace>
+        <el-button @click="showDialog" style="float: right">新增</el-button>
         <el-table :data="tableData" style="width: 100%;margin-top: 12px">
             <el-table-column prop="metadata.name" label="名称" width="220"/>
             <el-table-column label="域名">
@@ -30,19 +31,46 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog v-model="visible">
+            <el-form :model="form" label-width="120px">
+                <el-form-item label="名称">
+                    <el-input v-model="form.ingress_name" />
+                </el-form-item>
+                <el-form-item label="命名空间">
+                    <el-select v-model="form.ingress_namespace" @change="getList">
+                        <el-option v-for="(item,index) in namespaceList" :index="index" :label="item.metadata.name" :value="item.metadata.name"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="域名">
+                    <el-input v-model="form.ingress_host" />
+                </el-form-item>
+                <el-form-item label="服务名">
+                    <el-input v-model.number="form.ingress_service_name" />
+                </el-form-item>
+                <el-form-item label="服务端口号">
+                    <el-input-number v-model.number="form.ingress_service_port" />
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="submit">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script setup>
-import {getRelativeTime}             from "@/utils/time"
-import {onMounted, reactive, toRefs} from "vue";
-import {IngressList}  from "@/api/k8s_base";
-import Namespace                     from "@/components/namespace/index.vue";
+import {getRelativeTime}                  from "@/utils/time"
+import {onMounted, reactive, ref, toRefs} from "vue";
+import Namespace                 from "@/components/namespace/index.vue";
+import {AddIngress, IngressList} from "@/api/ingress";
 
 const data = reactive({
     tableData: [],
     namespace: "",
+    visible:false,
+    namespaceList: [],
+    form:{}
 })
-const {tableData, namespace} = toRefs(data)
+const {tableData, namespace,namespaceList,visible,form} = toRefs(data)
 
 const namespaceChanged = (val) => {
     data.namespace = val;
@@ -55,6 +83,23 @@ const getList = async () => {
 
 onMounted(async () => {
     await getList()
+    await getNamespaceDataList()
 })
+
+const showDialog = ()=>{
+    data.visible = true
+}
+
+const namespaceRef =ref(null)
+const getNamespaceDataList = ()=>{
+    data.namespaceList = namespaceRef.value.getNamespaceDataList()
+}
+
+const submit = async () => {
+    await AddIngress(data.form)
+    data.visible = false
+    data.form={}
+    await getList()
+}
 </script>
 

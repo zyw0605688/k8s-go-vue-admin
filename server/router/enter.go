@@ -23,14 +23,12 @@ func Setup(r *gin.Engine) {
 	{
 		r.POST("/deployment", api.CreateDeployment)
 		r.DELETE("/deployment", api.DeleteDeployment)
-		r.PUT("/deployment", api.UpdateDeployment)
 		r.GET("/deployment", api.GetDeploymentList)
 	}
 
 	{
 		r.POST("/pod", api.GetPodList)
 		r.DELETE("/pod", api.GetPodList)
-		r.PUT("/pod", api.GetPodList)
 		r.GET("/pod", api.GetPodList)
 	}
 
@@ -41,6 +39,8 @@ func Setup(r *gin.Engine) {
 	}
 
 	{
+		r.POST("/ingress", api.CreateIngress)
+		r.DELETE("/ingress", api.DeleteIngress)
 		r.GET("/ingress", api.GetIngressList)
 	}
 }
