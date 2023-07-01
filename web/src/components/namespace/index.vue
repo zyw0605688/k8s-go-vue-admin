@@ -32,4 +32,12 @@ const emit = defineEmits(["namespaceChanged"]);
 const namespaceChanged = ()=>{
     emit("namespaceChanged", data.namespace)
 }
+
+const getNamespaceDataList = ()=>{
+    return data.namespaceList
+}
+
+defineExpose({
+    getNamespaceDataList
+})
 </script>

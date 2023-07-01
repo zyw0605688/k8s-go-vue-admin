@@ -12,6 +12,4 @@ export const IngressList = (params) => {
   return http.get("/ingress", params)
 }
 
-export const ServiceList = (params) => {
-  return http.get("/service", params)
-}
+

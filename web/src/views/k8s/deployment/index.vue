@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Namespace @namespaceChanged="namespaceChanged"></Namespace>
+        <Namespace @namespaceChanged="namespaceChanged" ref="namespaceRef"></Namespace>
         <el-button @click="showDialog" style="float: right">新增</el-button>
         <el-table :data="tableData" style="width: 100%;margin-top: 12px">
             <el-table-column prop="metadata.name" label="名称" width="220"/>
@@ -51,8 +51,8 @@
     </div>
 </template>
 <script setup>
-import {getRelativeTime}             from "@/utils/time"
-import {onMounted, reactive, toRefs}                     from "vue";
+import {getRelativeTime}                                 from "@/utils/time"
+import {onMounted, reactive, ref, toRefs}                from "vue";
 import {AddDeployment, DeleteDeployment, DeploymentList} from "@/api/deployment";
 import Namespace from "@/components/namespace/index.vue"
 
@@ -79,6 +79,7 @@ const getList = async () => {
 
 onMounted(async () => {
     await getList()
+    await getNamespaceDataList()
 })
 
 const showDialog = ()=>{
@@ -92,10 +93,18 @@ const submit = async () => {
     await getList()
 }
 
-const deleteOne = async () => {
-    const params = {}
+const deleteOne = async (row) => {
+    const params = {
+        namespace:row.metadata.namespace,
+        name:row.metadata.name,
+    }
     await DeleteDeployment(params)
     await getList()
+}
+
+const namespaceRef =ref(null)
+const getNamespaceDataList = ()=>{
+    data.namespaceList = namespaceRef.value.getNamespaceDataList()
 }
 </script>
 

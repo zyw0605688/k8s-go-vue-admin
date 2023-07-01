@@ -35,9 +35,8 @@ func Setup(r *gin.Engine) {
 	}
 
 	{
-		r.POST("/service", api.GetServiceList)
-		r.DELETE("/service", api.GetServiceList)
-		r.PUT("/service", api.GetServiceList)
+		r.POST("/service", api.CreateService)
+		r.DELETE("/service", api.DeleteService)
 		r.GET("/service", api.GetServiceList)
 	}
 

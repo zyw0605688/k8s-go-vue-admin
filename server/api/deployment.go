@@ -33,15 +33,15 @@ func CreateDeployment(c *gin.Context) {
 
 func DeleteDeployment(c *gin.Context) {
 	// 构建参数
-	// deployment := &appsv1.Deployment{}
-	namespace := "zyw"
-	// 操作
-	err := config.ClientSet.AppsV1().Deployments(namespace).Delete(context.TODO(), "nginx", metav1.DeleteOptions{})
+	namespace := c.Query("namespace")
+	name := c.Query("name")
+
+	err := config.ClientSet.AppsV1().Deployments(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
 	if err != nil {
 		return
 	}
 	c.JSON(200, gin.H{
-		"message": "",
+		"message": name,
 	})
 }
 

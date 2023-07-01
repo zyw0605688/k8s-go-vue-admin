@@ -43,7 +43,7 @@ export default {
       }
     },
     {
-      path: "/service",
+      path: "/service.ts",
       name: "service",
       component: () => import("@/views/k8s/service/index.vue"),
       meta: {
