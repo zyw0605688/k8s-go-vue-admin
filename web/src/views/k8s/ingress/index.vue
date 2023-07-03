@@ -30,6 +30,11 @@
                     {{getRelativeTime(scope.row.metadata.creationTimestamp)}}
                 </template>
             </el-table-column>
+            <el-table-column label="操作">
+                <template #default="scope">
+                    <el-button @click="deleteOne(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
         </el-table>
         <el-dialog v-model="visible">
             <el-form :model="form" label-width="120px">
@@ -60,8 +65,8 @@
 <script setup>
 import {getRelativeTime}                  from "@/utils/time"
 import {onMounted, reactive, ref, toRefs} from "vue";
-import Namespace                 from "@/components/namespace/index.vue";
-import {AddIngress, IngressList} from "@/api/ingress";
+import Namespace                                from "@/components/namespace/index.vue";
+import {AddIngress, DeleteIngress, IngressList} from "@/api/ingress";
 
 const data = reactive({
     tableData: [],
@@ -99,6 +104,15 @@ const submit = async () => {
     await AddIngress(data.form)
     data.visible = false
     data.form={}
+    await getList()
+}
+
+const deleteOne = async (row) => {
+    const params = {
+        namespace:row.metadata.namespace,
+        name:row.metadata.name,
+    }
+    await DeleteIngress(params)
     await getList()
 }
 </script>
