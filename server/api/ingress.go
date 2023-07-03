@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"gitee.com/zyw0605688_admin/k8s-go-vue-admin/server/config"
 	"github.com/gin-gonic/gin"
-	v1 "k8s.io/api/networking/v1"
+	newworkV1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,30 +26,32 @@ func CreateIngress(c *gin.Context) {
 
 	traefik := "traefik"
 	var Traefik *string = &traefik
+	var pathType = newworkV1.PathTypePrefix
 
 	// 构建参数开始
-	ingress := &v1.Ingress{
+	ingress := &newworkV1.Ingress{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: info.IngressName,
 		},
-		Spec: v1.IngressSpec{
+		Spec: newworkV1.IngressSpec{
 			IngressClassName: Traefik,
-			Rules: []v1.IngressRule{
+			Rules: []newworkV1.IngressRule{
 				{
 					Host: info.IngressHost,
-					IngressRuleValue: v1.IngressRuleValue{
-						HTTP: &v1.HTTPIngressRuleValue{
-							Paths: []v1.HTTPIngressPath{
+					IngressRuleValue: newworkV1.IngressRuleValue{
+						HTTP: &newworkV1.HTTPIngressRuleValue{
+							Paths: []newworkV1.HTTPIngressPath{
 								{
 									Path: "/",
-									Backend: v1.IngressBackend{
-										Service: &v1.IngressServiceBackend{
+									Backend: newworkV1.IngressBackend{
+										Service: &newworkV1.IngressServiceBackend{
 											Name: info.IngressServiceName,
-											Port: v1.ServiceBackendPort{
+											Port: newworkV1.ServiceBackendPort{
 												Number: info.IngressServicePort,
 											},
 										},
 									},
+									PathType: &pathType,
 								},
 							},
 						},
@@ -61,7 +63,10 @@ func CreateIngress(c *gin.Context) {
 	// 构建参数结束
 	fmt.Println(">>>", ingress)
 
-	result, _ := config.ClientSet.NetworkingV1().Ingresses(info.IngressNamespace).Create(context.TODO(), ingress, metav1.CreateOptions{})
+	result, err := config.ClientSet.NetworkingV1().Ingresses(info.IngressNamespace).Create(context.TODO(), ingress, metav1.CreateOptions{})
+	if err != nil {
+		fmt.Println("错误信息：", err)
+	}
 	c.JSON(200, gin.H{
 		"message": result,
 	})
